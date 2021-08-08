@@ -7,8 +7,8 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "link.joy.cctv"
-        minSdkVersion 18
+        applicationId "link4.joy.cctv"
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -19,6 +19,7 @@ android {
     buildTypes {
         debug {
             minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
             minifyEnabled true
@@ -51,7 +52,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:2.0.5'
-    implementation 'org.telegram:telegrambots:5.3.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.4'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

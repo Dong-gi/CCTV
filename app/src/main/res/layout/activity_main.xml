@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="10dp"
     tools:context=".MainActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Set Telegram Bot Token" />
+
+    <EditText
+        android:id="@+id/editTextTelegramToken"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:hint="Looks like 123456789:ABC...XYZ"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/buttonSetTelegramToken"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onApplyToken"
+        android:text="Apply Token" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:singleLine="false"
+        android:text="Contact : help@4joy.link\nDonate : http://paypal.me/DonggiKim\n\nLicense\n> rtmp-rtsp-stream-client-java : Apache-2.0 License\nhttps://github.com/pedroSG94/rtmp-rtsp-stream-client-java/blob/master/LICENSE.txt" />
+</LinearLayout>

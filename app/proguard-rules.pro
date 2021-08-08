@@ -19,3 +19,14 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keepattributes SourceFile,LineNumberTable,*Annotation*,EnclosingMethod,Signature,Exceptions,InnerClasses
+-keepnames class com.fasterxml.jackson.** { *; }
+-dontwarn com.fasterxml.jackson.databind.**
+-keep class com.fasterxml.jackson.** { *; }
+-keep @com.fasterxml.jackson.annotation.JsonIgnoreProperties class * { *; }
+-keepclassmembers public final enum com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility {
+    public static final com.fasterxml.jackson.annotation.JsonAutoDetect *; }
+-keep public class link4.joy.telegram.** {
+    *;
+}
