@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
@@ -35,6 +36,8 @@ public class AppSettings {
     private static int cameraKBitRate = 9000;
     private static Context context;
     private static AppState<FlashState> flashState = new AbstractAppState<FlashState>("Flash") {
+        private Camera camera;
+
         @Override
         public void setDesiredState(FlashState desiredState) {
             super.setDesiredState(desiredState);
@@ -47,7 +50,7 @@ public class AppSettings {
         public void adjustState() {
             switch (getDesiredState()) {
                 case OFF:
-                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         CameraManager camManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
                         try {
                             String cameraId = camManager.getCameraIdList()[0];
@@ -56,10 +59,15 @@ public class AppSettings {
                         } catch (CameraAccessException e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        if (camera != null) {
+                            camera.stopPreview();
+                            camera.release();
+                        }
                     }
                     return;
                 case ON:
-                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         CameraManager camManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
                         try {
                             String cameraId = camManager.getCameraIdList()[0];
@@ -68,8 +76,16 @@ public class AppSettings {
                         } catch (CameraAccessException e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        camera = Camera.open();
+                        Camera.Parameters p = camera.getParameters();
+                        p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                        camera.setParameters(p);
+                        camera.startPreview();
                     }
                     return;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + getDesiredState());
             }
         }
     };
@@ -108,6 +124,10 @@ public class AppSettings {
 
     public static RtmpCamera1 getCamera() {
         return camera;
+    }
+
+    public static Context getContext() {
+        return context;
     }
 
     public static AppState<FlashState> getFlashState() {
@@ -150,6 +170,13 @@ public class AppSettings {
         SharedPreferences.Editor editor = context.getSharedPreferences(getString(R.string.setting_key), Context.MODE_PRIVATE).edit();
         editor.putString(getString(R.string.setting_key_youtube_rtmp_url), youtubeRtmpUrl);
         editor.commit();
+
+        Intent mStartActivity = new Intent(context, MainActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
     }
 
     public static void init(Context context) {

@@ -1,6 +1,8 @@
 package link4.joy.cctv.entity;
 
-import android.os.Build;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -45,13 +47,37 @@ public enum TelegramBotCommands implements TelegramBotCommand {
                 req2.chatId = update.message.chat.id;
                 StringBuilder builder = new StringBuilder("Available commands\n\n");
                 for (TelegramBotCommands command : getCommands())
-                    builder.append("<strong>").append(command.command).append("</strong> : ").append(command.description()).append('\n');
+                    builder.append(command.key).append(" : ").append(command.description()).append('\n');
                 req2.text = builder.toString();
                 req2.parseMode = ParseMode.HTML;
                 bot.sendMessage(req2);
             }
 
             return null;
+        }
+    },
+    BATTERY {
+        @Override
+        public String description() {
+            return AppSettings.getString(R.string.command_description_battery);
+        }
+
+        @Override
+        public SendMessageResponse process(TelegramBot bot, Update update) throws IOException {
+            IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            Intent batteryStatus = AppSettings.getContext().registerReceiver(null, ifilter);
+
+            int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+            float batteryPct = level * 100 / (float) scale;
+
+            SendMessageRequest req = new SendMessageRequest();
+            req.chatId = update.message.chat.id;
+            req.text = "Battery : " + batteryPct + '%';
+            SendMessageResponse res = bot.sendMessage(req);
+            AppSettings.getCamera().switchCamera();
+            return res;
         }
     },
     FLIP_CAMERA {
@@ -218,9 +244,7 @@ public enum TelegramBotCommands implements TelegramBotCommand {
 
     public static List<TelegramBotCommands> getCommands() {
         List<TelegramBotCommands> commands = new LinkedList<>();
-        commands.addAll(Arrays.asList(ON_LIVE, OFF_LIVE, SET_YOUTUBE, FLIP_CAMERA, SET_CAMERA_ANGLE, SET_CAMERA_KBIT_RATE));
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            commands.addAll(Arrays.asList(ON_FLASH, OFF_FLASH));
+        commands.addAll(Arrays.asList(ON_LIVE, OFF_LIVE, SET_YOUTUBE, ON_FLASH, OFF_FLASH, FLIP_CAMERA, SET_CAMERA_ANGLE, SET_CAMERA_KBIT_RATE, BATTERY));
         return commands;
     }
 
