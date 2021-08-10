@@ -45,9 +45,9 @@ public enum TelegramBotCommands implements TelegramBotCommand {
             } else {
                 SendMessageRequest req2 = new SendMessageRequest();
                 req2.chatId = update.message.chat.id;
-                StringBuilder builder = new StringBuilder("Available commands\n\n");
+                StringBuilder builder = new StringBuilder("<strong>Available commands</strong>\n\n");
                 for (TelegramBotCommands command : getCommands())
-                    builder.append(command.key).append(" : ").append(command.description()).append('\n');
+                    builder.append(command.key).append(" : ").append(command.description()).append("\n\n");
                 req2.text = builder.toString();
                 req2.parseMode = ParseMode.HTML;
                 bot.sendMessage(req2);
@@ -76,7 +76,6 @@ public enum TelegramBotCommands implements TelegramBotCommand {
             req.chatId = update.message.chat.id;
             req.text = "Battery : " + batteryPct + '%';
             SendMessageResponse res = bot.sendMessage(req);
-            AppSettings.getCamera().switchCamera();
             return res;
         }
     },

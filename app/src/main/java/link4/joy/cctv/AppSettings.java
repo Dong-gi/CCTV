@@ -9,11 +9,13 @@ import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
+import android.os.PowerManager;
 
 import com.pedro.rtmp.utils.ConnectCheckerRtmp;
 import com.pedro.rtplibrary.rtmp.RtmpCamera1;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +29,8 @@ import link4.joy.telegram.bot.consts.ParseMode;
 import link4.joy.telegram.bot.req.SendMessageRequest;
 import link4.joy.telegram.bot.req.SetMyCommandsRequest;
 import link4.joy.telegram.bot.type.BotCommand;
+
+import static android.content.Context.POWER_SERVICE;
 
 public class AppSettings {
     public static final String TAG = "AppSettings";
@@ -95,6 +99,8 @@ public class AppSettings {
     private static String telegramToken;
     private static String youtubeRtmpUrl;
     private static AppState<YoutubeState> youtubeState = new AbstractAppState<YoutubeState>("YouTube") {
+        private PowerManager.WakeLock wakeLock;
+
         @Override
         public void setDesiredState(YoutubeState desiredState) {
             SharedPreferences.Editor editor = context.getSharedPreferences(getString(R.string.setting_key), Context.MODE_PRIVATE).edit();
@@ -114,8 +120,15 @@ public class AppSettings {
             switch (getDesiredState()) {
                 case OFF:
                     camera.stopStream();
+                    wakeLock.release();
                     return;
                 case ON:
+                    if (wakeLock == null) {
+                        PowerManager powerManager = (PowerManager) context.getSystemService(POWER_SERVICE);
+                        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                                "CCTV:Streaming");
+                    }
+                    wakeLock.acquire();
                     camera.startStream("rtmp://a.rtmp.youtube.com/live2/" + youtubeRtmpUrl);
                     return;
             }
@@ -132,6 +145,10 @@ public class AppSettings {
 
     public static AppState<FlashState> getFlashState() {
         return flashState;
+    }
+
+    public static long getTelegramChatId() {
+        return telegramChatId;
     }
 
     public static String getYoutubeRtmpUrl() {
@@ -166,17 +183,20 @@ public class AppSettings {
     }
 
     public static void setYoutubeRtmpUrl(String youtubeRtmpUrl) {
+        String oldUrl = AppSettings.youtubeRtmpUrl;
         AppSettings.youtubeRtmpUrl = youtubeRtmpUrl;
         SharedPreferences.Editor editor = context.getSharedPreferences(getString(R.string.setting_key), Context.MODE_PRIVATE).edit();
         editor.putString(getString(R.string.setting_key_youtube_rtmp_url), youtubeRtmpUrl);
         editor.commit();
 
-        Intent mStartActivity = new Intent(context, MainActivity.class);
-        int mPendingIntentId = 123456;
-        PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-        System.exit(0);
+        if (Objects.equals(oldUrl, youtubeRtmpUrl) == false) {
+            Intent mStartActivity = new Intent(context, MainActivity.class);
+            int mPendingIntentId = 123456;
+            PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+            AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+            System.exit(0);
+        }
     }
 
     public static void init(Context context) {
@@ -231,7 +251,7 @@ public class AppSettings {
 
                 @Override
                 public void onConnectionSuccessRtmp() {
-                    sendBotMessage("YouTube Connection Succeed...");
+                    sendBotMessage("YouTube Connection Succeed...\nPlz keep <strong>screen on</strong> if you use <strong>Android 9 ↑</strong>");
                     youtubeState.setCurrentState(YoutubeState.ON);
                 }
 

@@ -16,7 +16,7 @@ public final class PermissionChecker {
             return;
 
         new AlertDialog.Builder(activity)
-                .setMessage("We need permissions to record")
+                .setMessage("App needs permissions(camera + voice) to record.\n\nSince all settings will be set via Telegram except bot token, we request permissions here.")
                 .setPositiveButton("OK", (x, y) -> requestPermissions(activity))
                 .setOnCancelListener((x) -> requestPermissions(activity))
                 .create()

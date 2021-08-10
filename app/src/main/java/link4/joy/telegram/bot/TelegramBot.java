@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import link4.joy.cctv.AppSettings;
 import link4.joy.telegram.bot.req.SendMessageRequest;
 import link4.joy.telegram.bot.req.SendPhotoRequest;
 import link4.joy.telegram.bot.req.SetMyCommandsRequest;
@@ -194,7 +195,20 @@ public final class TelegramBot {
     public List<BaseResponse> processLastUpdate() throws IOException {
         GetUpdatesResponse res1 = getUpdates();
         if (res1.ok && res1.result != null && res1.result.length > 0) {
-            Update update = res1.result[res1.result.length - 1];
+            Update update = null;
+            if (AppSettings.getTelegramChatId() > 0) {
+                long chatId = AppSettings.getTelegramChatId();
+                for (int i = res1.result.length - 1; i >= 0; --i)
+                    if (res1.result[i].message.chat.id == chatId) {
+                        update = res1.result[i];
+                        break;
+                    } else
+                        continue;
+            } else {
+                update = res1.result[res1.result.length - 1];
+            }
+            if (update == null)
+                return Arrays.asList(BaseResponse.NOTHING_TO_DO);
             Set<TelegramBotCommand> set = commands.get(update.message.text.contains(" ")
                     ? update.message.text.substring(0, update.message.text.indexOf(' '))
                     : update.message.text);

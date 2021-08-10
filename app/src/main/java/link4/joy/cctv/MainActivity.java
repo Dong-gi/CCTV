@@ -17,6 +17,15 @@ public class MainActivity extends AppCompatActivity {
         PermissionChecker.check(this);
         AppSettings.init(this);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.setting_key), Context.MODE_PRIVATE);
+        long chatId = preferences.getLong(getString(R.string.setting_key_telegram_chat_id), 0);
+        if (chatId > 0) {
+            findViewById(R.id.textView).setVisibility(View.GONE);
+            findViewById(R.id.textView3).setVisibility(View.GONE);
+            findViewById(R.id.editTextTelegramToken).setVisibility(View.GONE);
+            findViewById(R.id.buttonSetTelegramToken).setVisibility(View.GONE);
+        }
     }
 
     @Override

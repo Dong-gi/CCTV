@@ -9,11 +9,21 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:gravity="center_horizontal"
+        android:text="↓ Tutorial ↓\nhttps://dong-gi.github.io/posts/project/cctv.html\n\nOnce you apply correct token,\nYou can command rest actions via Telegram Bot\n\n\n" />
+
+    <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Set Telegram Bot Token" />
+        android:text="↓ Set Telegram Bot Token ↓"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editTextTelegramToken"
@@ -21,7 +31,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center_horizontal"
-        android:hint="Looks like 123456789:ABC...XYZ"
+        android:hint=" A token looks like 12345:ABC...XYZ"
         android:inputType="textPersonName" />
 
     <Button
@@ -36,6 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:autoLink="all"
+        android:gravity="center_horizontal"
         android:singleLine="false"
-        android:text="Contact : help@4joy.link\nDonate : http://paypal.me/DonggiKim\n\nLicense\n> rtmp-rtsp-stream-client-java : Apache-2.0 License\nhttps://github.com/pedroSG94/rtmp-rtsp-stream-client-java/blob/master/LICENSE.txt" />
+        android:text="\n\n↓ Contact ↓\nhelp@4joy.link\n\n↓ Donate ↓\nhttp://paypal.me/DonggiKim\n\n↓ License ↓\nrtmp-rtsp-stream-client-java : Apache-2.0 License\nhttps://github.com/pedroSG94/rtmp-rtsp-stream-client-java/blob/master/LICENSE.txt\n\n" />
 </LinearLayout>
