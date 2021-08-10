@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">CCTV</string>
+    <string name="command_description_battery">Get battery percentage</string>
+    <string name="command_description_flip_camera">Flip camera during live stream</string>
+    <string name="command_description_off_flash">Turn on flash light</string>
+    <string name="command_description_on_flash">Turn off flash light</string>
+    <string name="command_description_off_live">"Stop YouTube Live Streaming
+        App will restart once to release resources"</string>
+    <string name="command_description_on_live">Start YouTube Live Streaming</string>
+    <string name="command_description_set_angle">"Set camera angle; 0~360
+        e.g. /set_angle 90"</string>
+    <string name="command_description_set_kbit_rate">"Set camera Kb rate;
+        e.g. /set_kbit_rate 5000"</string>
+    <string name="command_description_set_youtube">"Set YouTube RTMP key;
+        e.g. /set_youtube xxxx-xxxx-xxxx-xxxx-xxxx
+        Here 'xxxx...xxxx' is the RTMP key which you can find in <a href="https://studio.youtube.com/">https://studio.youtube.com/</a>
+
+        App will restart once to apply the change"</string>
+    <string name="setting_key">link4.joy.cctv</string>
+    <string name="setting_key_camera_angle">setting_key_camera_angle</string>
+    <string name="setting_key_camera_kbit_rate">setting_key_camera_kbit_rate</string>
+    <string name="setting_key_flash_on_off">setting_key_flash_on_off</string>
+    <string name="setting_key_telegram_chat_id">setting_key_telegram_chat_id</string>
+    <string name="setting_key_telegram_token">setting_key_telegram_token</string>
+    <string name="setting_key_youtube_on_off">setting_key_youtube_on_off</string>
+    <string name="setting_key_youtube_rtmp_url">setting_key_youtube_rtmp_url</string>
+</resources>
