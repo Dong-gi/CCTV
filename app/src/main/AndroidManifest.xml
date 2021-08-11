@@ -20,8 +20,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CCTV">
+        <service
+            android:name=".CheckTelegramService"
+            android:enabled="true"
+            android:exported="true"></service>
 
-        <receiver android:name=".AutoStartService">
+        <receiver android:name=".BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

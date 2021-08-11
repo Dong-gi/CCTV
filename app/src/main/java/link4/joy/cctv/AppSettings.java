@@ -1,5 +1,7 @@
 package link4.joy.cctv;
 
+import static android.content.Context.POWER_SERVICE;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -16,8 +18,6 @@ import com.pedro.rtplibrary.rtmp.RtmpCamera1;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import link4.joy.cctv.entity.AbstractAppState;
 import link4.joy.cctv.entity.AppState;
@@ -30,10 +30,10 @@ import link4.joy.telegram.bot.req.SendMessageRequest;
 import link4.joy.telegram.bot.req.SetMyCommandsRequest;
 import link4.joy.telegram.bot.type.BotCommand;
 
-import static android.content.Context.POWER_SERVICE;
-
 public class AppSettings {
     public static final String TAG = "AppSettings";
+    public static final int INTENT_ID_START_CHECK_TELEGRAM_SERVICE = 101;
+    public static final int INTENT_ID_START_MAIN_ACTIVITY = 100;
 
     private static RtmpCamera1 camera;
     private static int cameraAngle;
@@ -147,6 +147,10 @@ public class AppSettings {
         return flashState;
     }
 
+    public static TelegramBot getTelegramBot() {
+        return telegramBot;
+    }
+
     public static long getTelegramChatId() {
         return telegramChatId;
     }
@@ -190,11 +194,10 @@ public class AppSettings {
         editor.commit();
 
         if (Objects.equals(oldUrl, youtubeRtmpUrl) == false) {
-            Intent mStartActivity = new Intent(context, MainActivity.class);
-            int mPendingIntentId = 123456;
-            PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-            AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+            Intent intent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, INTENT_ID_START_MAIN_ACTIVITY, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            manager.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
             System.exit(0);
         }
     }
@@ -233,13 +236,6 @@ public class AppSettings {
                     }
                 }.start();
             }
-            Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(() -> {
-                try {
-                    telegramBot.processLastUpdate();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }, 0, 5, TimeUnit.SECONDS);
         }
 
         if (camera == null) {
@@ -269,11 +265,10 @@ public class AppSettings {
                     sendBotMessage("YouTube Connection Ended...");
                     youtubeState.setCurrentState(YoutubeState.OFF);
 
-                    Intent mStartActivity = new Intent(context, MainActivity.class);
-                    int mPendingIntentId = 123456;
-                    PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-                    AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                    mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+                    Intent intent = new Intent(context, MainActivity.class);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(context, INTENT_ID_START_MAIN_ACTIVITY, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    manager.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
                     System.exit(0);
                 }
 
