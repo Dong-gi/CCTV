@@ -1,10 +1,13 @@
 package link4.joy.cctv;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -26,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
             findViewById(R.id.editTextTelegramToken).setVisibility(View.GONE);
             findViewById(R.id.buttonSetTelegramToken).setVisibility(View.GONE);
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+        startService(new Intent(this, CheckTelegramService.class));
     }
 
     @Override

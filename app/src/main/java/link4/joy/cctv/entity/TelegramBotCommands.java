@@ -103,6 +103,14 @@ public enum TelegramBotCommands implements TelegramBotCommand {
 
         @Override
         public SendMessageResponse process(TelegramBot bot, Update update) throws IOException {
+            if (AppSettings.getFlashState().getCurrentState() == FlashState.ON) {
+                SendMessageRequest req = new SendMessageRequest();
+                req.chatId = update.message.chat.id;
+                req.text = "Flash light already turned on...";
+                SendMessageResponse res = bot.sendMessage(req);
+                return res;
+            }
+
             SendMessageRequest req = new SendMessageRequest();
             req.chatId = update.message.chat.id;
             req.text = "Try to turn on flash light...";
@@ -119,6 +127,14 @@ public enum TelegramBotCommands implements TelegramBotCommand {
 
         @Override
         public SendMessageResponse process(TelegramBot bot, Update update) throws IOException {
+            if (AppSettings.getFlashState().getCurrentState() == FlashState.OFF) {
+                SendMessageRequest req = new SendMessageRequest();
+                req.chatId = update.message.chat.id;
+                req.text = "Flash light already turned off...";
+                SendMessageResponse res = bot.sendMessage(req);
+                return res;
+            }
+
             SendMessageRequest req = new SendMessageRequest();
             req.chatId = update.message.chat.id;
             req.text = "Try to turn off flash light...";
@@ -135,9 +151,17 @@ public enum TelegramBotCommands implements TelegramBotCommand {
 
         @Override
         public SendMessageResponse process(TelegramBot bot, Update update) throws IOException {
+            if (AppSettings.getYoutubeState().getCurrentState() == YoutubeState.ON) {
+                SendMessageRequest req = new SendMessageRequest();
+                req.chatId = update.message.chat.id;
+                req.text = "Live is ongoing...";
+                SendMessageResponse res = bot.sendMessage(req);
+                return res;
+            }
+
             SendMessageRequest req = new SendMessageRequest();
             req.chatId = update.message.chat.id;
-            req.text = "Try to turn on YouTube Live Streaming...";
+            req.text = "Try to turn on YouTube live streaming...";
             SendMessageResponse res = bot.sendMessage(req);
             AppSettings.getYoutubeState().setDesiredState(YoutubeState.ON);
             return res;
@@ -151,9 +175,17 @@ public enum TelegramBotCommands implements TelegramBotCommand {
 
         @Override
         public SendMessageResponse process(TelegramBot bot, Update update) throws IOException {
+            if (AppSettings.getYoutubeState().getCurrentState() == YoutubeState.OFF) {
+                SendMessageRequest req = new SendMessageRequest();
+                req.chatId = update.message.chat.id;
+                req.text = "Live already ended...";
+                SendMessageResponse res = bot.sendMessage(req);
+                return res;
+            }
+
             SendMessageRequest req = new SendMessageRequest();
             req.chatId = update.message.chat.id;
-            req.text = "Try to turn off YouTube Live Streaming...";
+            req.text = "Try to turn off YouTube live streaming\nApp will restart once to release resources...";
             SendMessageResponse res = bot.sendMessage(req);
             AppSettings.getYoutubeState().setDesiredState(YoutubeState.OFF);
             return res;
