@@ -48,5 +48,5 @@
         android:autoLink="all"
         android:gravity="center_horizontal"
         android:singleLine="false"
-        android:text="\n\n↓ Contact ↓\nhelp@4joy.link\n\n↓ Donate ↓\nhttp://paypal.me/DonggiKim\n\n↓ License ↓\nrtmp-rtsp-stream-client-java : Apache-2.0 License\nhttps://github.com/pedroSG94/rtmp-rtsp-stream-client-java/blob/master/LICENSE.txt\n\n" />
+        android:text="\n\n↓ Contact ↓\nhelp@4joy.link\n\n↓ License ↓\nrtmp-rtsp-stream-client-java : Apache-2.0 License\nhttps://github.com/pedroSG94/rtmp-rtsp-stream-client-java/blob/master/LICENSE.txt\n\n" />
 </LinearLayout>
