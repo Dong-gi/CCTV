@@ -15,15 +15,15 @@ public abstract class AbstractAppState<T> implements AppState<T> {
     }
 
     @Override
-    public T getDesiredState() {
-        return desiredState;
-    }
-
-    @Override
     public void setCurrentState(T currentState) {
         this.currentState = currentState;
         if (desiredState != null && currentState != desiredState)
             adjustState();
+    }
+
+    @Override
+    public T getDesiredState() {
+        return desiredState;
     }
 
     @Override

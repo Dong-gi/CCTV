@@ -155,8 +155,33 @@ public class AppSettings {
         return telegramChatId;
     }
 
+    public static void setTelegramChatId(long telegramChatId) {
+        if (telegramChatId < 1)
+            return;
+        AppSettings.telegramChatId = telegramChatId;
+        SharedPreferences.Editor editor = context.getSharedPreferences(getString(R.string.setting_key), Context.MODE_PRIVATE).edit();
+        editor.putLong(getString(R.string.setting_key_telegram_chat_id), telegramChatId);
+        editor.commit();
+    }
+
     public static String getYoutubeRtmpUrl() {
         return youtubeRtmpUrl;
+    }
+
+    public static void setYoutubeRtmpUrl(String youtubeRtmpUrl) {
+        String oldUrl = AppSettings.youtubeRtmpUrl;
+        AppSettings.youtubeRtmpUrl = youtubeRtmpUrl;
+        SharedPreferences.Editor editor = context.getSharedPreferences(getString(R.string.setting_key), Context.MODE_PRIVATE).edit();
+        editor.putString(getString(R.string.setting_key_youtube_rtmp_url), youtubeRtmpUrl);
+        editor.commit();
+
+        if (Objects.equals(oldUrl, youtubeRtmpUrl) == false) {
+            Intent intent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, INTENT_ID_START_MAIN_ACTIVITY, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            manager.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
+            System.exit(0);
+        }
     }
 
     public static AppState<YoutubeState> getYoutubeState() {
@@ -175,31 +200,6 @@ public class AppSettings {
         SharedPreferences.Editor editor = context.getSharedPreferences(getString(R.string.setting_key), Context.MODE_PRIVATE).edit();
         editor.putInt(getString(R.string.setting_key_camera_kbit_rate), kBitRate);
         editor.commit();
-    }
-
-    public static void setTelegramChatId(long telegramChatId) {
-        if (telegramChatId < 1)
-            return;
-        AppSettings.telegramChatId = telegramChatId;
-        SharedPreferences.Editor editor = context.getSharedPreferences(getString(R.string.setting_key), Context.MODE_PRIVATE).edit();
-        editor.putLong(getString(R.string.setting_key_telegram_chat_id), telegramChatId);
-        editor.commit();
-    }
-
-    public static void setYoutubeRtmpUrl(String youtubeRtmpUrl) {
-        String oldUrl = AppSettings.youtubeRtmpUrl;
-        AppSettings.youtubeRtmpUrl = youtubeRtmpUrl;
-        SharedPreferences.Editor editor = context.getSharedPreferences(getString(R.string.setting_key), Context.MODE_PRIVATE).edit();
-        editor.putString(getString(R.string.setting_key_youtube_rtmp_url), youtubeRtmpUrl);
-        editor.commit();
-
-        if (Objects.equals(oldUrl, youtubeRtmpUrl) == false) {
-            Intent intent = new Intent(context, MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, INTENT_ID_START_MAIN_ACTIVITY, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            manager.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
-            System.exit(0);
-        }
     }
 
     public static void init(Context context) {

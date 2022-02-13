@@ -3,9 +3,9 @@ package link4.joy.cctv.entity;
 public interface AppState<T> {
     T getCurrentState();
 
-    T getDesiredState();
-
     void setCurrentState(T currentState);
+
+    T getDesiredState();
 
     void setDesiredState(T desiredStatus);
 
